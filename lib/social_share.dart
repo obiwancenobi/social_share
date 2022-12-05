@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:social_share/file_type.dart';
 
 class SocialShare {
   static const MethodChannel _channel = const MethodChannel('social_share');
@@ -178,10 +179,33 @@ class SocialShare {
     return version;
   }
 
-  static Future<String?> shareWhatsapp(String content) async {
-    final Map<String, dynamic> args = <String, dynamic>{"content": content};
-    final String? version = await _channel.invokeMethod('shareWhatsapp', args);
-    return version;
+  // static Future<String?> shareWhatsapp(String content) async {
+  //   final Map<String, dynamic> args = <String, dynamic>{"content": content};
+  //   final String? version = await _channel.invokeMethod('shareWhatsapp', args);
+  //   return version;
+  // }
+
+  Future<String?> shareWhatsapp(
+      {String msg = '',
+      String imagePath = '',
+      FileType? fileType = FileType.image}) async {
+    final Map<String, dynamic> arguments = <String, dynamic>{};
+    arguments.putIfAbsent('msg', () => msg);
+    arguments.putIfAbsent('url', () => imagePath);
+    if (fileType == FileType.image) {
+      arguments.putIfAbsent('fileType', () => 'image');
+    } else {
+      arguments.putIfAbsent('fileType', () => 'video');
+    }
+
+    String? result;
+    try {
+      result = await _channel.invokeMethod<String>('shareWhatsapp', arguments);
+    } catch (e) {
+      return e.toString();
+    }
+
+    return result;
   }
 
   static Future<Map?> checkInstalledAppsForShare() async {

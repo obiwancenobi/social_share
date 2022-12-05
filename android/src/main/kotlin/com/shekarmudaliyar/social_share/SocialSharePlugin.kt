@@ -166,12 +166,19 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             result.success("success")
         } 
         else if (call.method == "shareWhatsapp") {
-            //shares content on WhatsApp
-            val content: String? = call.argument("content")
+            //shares content on WhatsApp'
+            
+            val msg: String? = call.argument("msg")
+            val imagePath: String? = call.argument("imagePath");
             val whatsappIntent = Intent(Intent.ACTION_SEND)
-            whatsappIntent.type = "text/plain"
+            whatsappIntent.setType("*/*");
+            System.out.print(imagePath+"url is not empty");
+            File file = new File(imagePath);
+            Uri fileUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", file);
+            whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            whatsappIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             whatsappIntent.setPackage("com.whatsapp")
-            whatsappIntent.putExtra(Intent.EXTRA_TEXT, content)
             try {
                 activity!!.startActivity(whatsappIntent)
                 result.success("success")
