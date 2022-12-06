@@ -73,6 +73,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             val file =  File(activeContext!!.cacheDir,stickerImage)
             val stickerImageFile = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", file)
             val appId: String? = call.argument("appId")
+            Log.d("Share Whatsapp", "stickerImageFile : ${stickerImageFile}")
 
             val intent = Intent(intentString)
 
@@ -123,6 +124,8 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
                 val imagefile =  File(activeContext!!.cacheDir,image)
                 val imageFileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", imagefile)
                 intent.type = "image/*"
+                Log.d("Share Whatsapp", "shareOptions : ${imageFileUri}")
+
                 intent.putExtra(Intent.EXTRA_STREAM,imageFileUri)
             } else {
                 intent.type = "text/plain";
@@ -166,20 +169,22 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             result.success("success")
         } 
         else if (call.method == "shareWhatsapp") {
-            //shares content on WhatsApp'
-            
             val msg: String? = call.argument("msg")
             val imagePath: String? = call.argument("imagePath")
             val whatsappIntent = Intent(Intent.ACTION_SEND)
-            whatsappIntent.setType("*/*")
+            whatsappIntent.type = "*/*"
+            whatsappIntent.setPackage("com.whatsapp")
 
             val file =  File(activeContext!!.cacheDir,imagePath)
             val fileUri = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", file)
+            val imgUri: Uri = Uri.parse(fileUri.toString())
+            Log.d("Share Whatsapp", "FIle : ${file.toString()}")
+            Log.d("Share Whatsapp", "Cache file path : ${fileUri}")
+            Log.d("Share Whatsapp", "imgUri : ${fileUri}")
 
             whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            whatsappIntent.putExtra(Intent.EXTRA_STREAM, fileUri)
+            whatsappIntent.putExtra(Intent.EXTRA_STREAM, imgUri)
             whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            whatsappIntent.setPackage("com.whatsapp")
             try {
                 activity!!.startActivity(whatsappIntent)
                 result.success("success")

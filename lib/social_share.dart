@@ -179,20 +179,17 @@ class SocialShare {
     return version;
   }
 
-  // static Future<String?> shareWhatsapp(String content) async {
-  //   final Map<String, dynamic> args = <String, dynamic>{"content": content};
-  //   final String? version = await _channel.invokeMethod('shareWhatsapp', args);
-  //   return version;
-  // }
-
-  Future<String?> shareWhatsapp({
+  static Future<String?> shareWhatsapp({
     String msg = '',
     String imagePath = '',
   }) async {
-    final Map<String, dynamic> arguments = <String, dynamic>{};
-    arguments.putIfAbsent('msg', () => msg);
-    arguments.putIfAbsent('url', () => imagePath);
-    arguments.putIfAbsent('fileType', () => 'image');
+    final Map<String, dynamic> arguments;
+    var _imagePath = imagePath;
+    var stickerFilename = "stickerAsset.png";
+
+    await reSaveImage(imagePath, stickerFilename);
+    _imagePath = stickerFilename;
+    arguments = <String, dynamic>{"imagePath": _imagePath, "msg": msg};
 
     String? result;
     try {
