@@ -185,18 +185,14 @@ class SocialShare {
   //   return version;
   // }
 
-  Future<String?> shareWhatsapp(
-      {String msg = '',
-      String imagePath = '',
-      FileType? fileType = FileType.image}) async {
+  Future<String?> shareWhatsapp({
+    String msg = '',
+    String imagePath = '',
+  }) async {
     final Map<String, dynamic> arguments = <String, dynamic>{};
     arguments.putIfAbsent('msg', () => msg);
     arguments.putIfAbsent('url', () => imagePath);
-    if (fileType == FileType.image) {
-      arguments.putIfAbsent('fileType', () => 'image');
-    } else {
-      arguments.putIfAbsent('fileType', () => 'video');
-    }
+    arguments.putIfAbsent('fileType', () => 'image');
 
     String? result;
     try {
