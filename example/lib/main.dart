@@ -323,11 +323,11 @@ class _MyAppState extends State<MyApp> {
                       SizedBox(width: 40),
                       ElevatedButton(
                         onPressed: () async {
-                          SocialShare.shareWhatsapp(
-                            "Hello World \n https://google.com",
-                          ).then((data) {
-                            print(data);
-                          });
+                          // SocialShare.shareWhatsapp(
+                          //   "Hello World \n https://google.com",
+                          // ).then((data) {
+                          //   print(data);
+                          // });
                         },
                         child: Icon(Icons.text_fields),
                       ),
